@@ -1,19 +1,20 @@
 /**
  * Created by Ofir_Dagan on 12/9/14.
+ * Jestified by Lior_marzouk 7/3/18.
  */
 'use strict';
 angular.module('tada', [])
-  .provider('tadaUtils', function ($provide) {
+  .provider('tadaUtils', ["$provide", function ($provide) {
     this.mock = function () {
       var args = Array.prototype.slice.call(arguments);
       args.forEach(function (service) {
-        $provide.service(service, function ($injector) {
+        $provide.service(service, ["$injector", function ($injector) {
           return $injector.get(service + 'Mock');
-        });
+        }]);
       });
     };
 
-    this.$get = function ($q, $rootScope) {
+    this.$get = ["$q", "$rootScope", function ($q, $rootScope) {
       function toArray(args) {
         return Array.prototype.slice.call(args);
       }
@@ -22,8 +23,8 @@ angular.module('tada', [])
         var calls = [];
         var callsIndex = 0;
         var returnsIndex = 0;
-        var spy = jasmine.createSpy(name);
-        spy.fake = spy.andCallFake || spy.and.callFake;
+        var spy = jest.fn();
+        spy.fake = spy.mockImplementation;
         var func = spy.fake(function () {
           var defer;
           if (calls[callsIndex]) {
@@ -85,14 +86,14 @@ angular.module('tada', [])
 
       function createFunc(name) {
         var calledWithArgs;
-        var spy = jasmine.createSpy(name);
-        spy.fake = spy.andCallFake || spy.and.callFake;
+        var spy = jest.fn();
+        spy.fake = spy.mockImplementation;
         var func = spy.fake(function () {
           calledWithArgs = toArray(arguments);
         });
 
         func.returns = function (value) {
-          func.realReturn = func.andReturn || func.and.returnValue;
+          func.realReturn = func.mockReturnValue;
           func.realReturn(value);
         };
 
@@ -118,5 +119,5 @@ angular.module('tada', [])
         createFunc: createFunc,
         createAsyncFunc: createAsyncFunc
       };
-    }
-  });
+    }]
+  }]);
