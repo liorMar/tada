@@ -1,20 +1,20 @@
 /**
  * Created by Ofir_Dagan on 12/9/14.
- * Jestified by Lior_marzouk 7/3/18.
+ * Jestified by Lior_Marzouk on 8/3/18.
  */
 'use strict';
 angular.module('tada', [])
-  .provider('tadaUtils', ["$provide", function ($provide) {
+  .provider('tadaUtils', function ($provide) {
     this.mock = function () {
       var args = Array.prototype.slice.call(arguments);
       args.forEach(function (service) {
-        $provide.service(service, ["$injector", function ($injector) {
+        $provide.service(service, function ($injector) {
           return $injector.get(service + 'Mock');
-        }]);
+        });
       });
     };
 
-    this.$get = ["$q", "$rootScope", function ($q, $rootScope) {
+    this.$get = function ($q, $rootScope) {
       function toArray(args) {
         return Array.prototype.slice.call(args);
       }
@@ -119,5 +119,5 @@ angular.module('tada', [])
         createFunc: createFunc,
         createAsyncFunc: createAsyncFunc
       };
-    }]
-  }]);
+    }
+  });
