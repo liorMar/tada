@@ -1,5 +1,6 @@
 /**
  * Created by Ofir_Dagan on 12/9/14.
+ * Jestified by Lior_Marzouk on 8/3/18.
  */
 'use strict';
 angular.module('tada', [])
@@ -22,8 +23,8 @@ angular.module('tada', [])
         var calls = [];
         var callsIndex = 0;
         var returnsIndex = 0;
-        var spy = jasmine.createSpy(name);
-        spy.fake = spy.andCallFake || spy.and.callFake;
+        var spy = jest.fn();
+        spy.fake = spy.mockImplementation;
         var func = spy.fake(function () {
           var defer;
           if (calls[callsIndex]) {
@@ -85,14 +86,14 @@ angular.module('tada', [])
 
       function createFunc(name) {
         var calledWithArgs;
-        var spy = jasmine.createSpy(name);
-        spy.fake = spy.andCallFake || spy.and.callFake;
+        var spy = jest.fn();
+        spy.fake = spy.mockImplementation;
         var func = spy.fake(function () {
           calledWithArgs = toArray(arguments);
         });
 
         func.returns = function (value) {
-          func.realReturn = func.andReturn || func.and.returnValue;
+          func.realReturn = func.mockReturnValue;
           func.realReturn(value);
         };
 
